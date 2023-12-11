@@ -36,7 +36,7 @@ function createIndex(directory){
 }
 
 function createStyle(directory){
-    fs.writeFileSync(path.join(__dirname, directory, "style.css"), "body{background-color: " +getRandomRgb()+ ";}")
+    fs.writeFileSync(path.join(__dirname, directory, "style.css"), "body{\n\tbackground-color: " +getRandomRgb()+ ";\n}")
 }
 
 function createMain() {

@@ -64,6 +64,13 @@ function createWebsiteLayout() {
     });
 }
 
+function getFileData(folderName, res){
+    fs.readFile(path.join(__dirname, '/' + folderName, 'index.html'), (err, data)=>{
+        res.write(data);
+        res.end()
+    })
+};
+
 createWebsiteLayout()
 
 server.on("request", (req, res) => {
@@ -72,28 +79,16 @@ server.on("request", (req, res) => {
         res.end()
     }
     if (req.url === "/") {
-        fs.readFile(path.join(__dirname, '/', 'index.html'), (err, data)=>{
-            res.write(data)
-            res.end()
-        })
+        getFileData("/", res);
     }
     if (req.url === "/" + pages[0]) {
-        fs.readFile(path.join(__dirname, '/' + pages[0], 'index.html'), (err, data)=>{
-            res.write(data)
-            res.end()
-        })
+        getFileData(pages[0], res);
     }
     if (req.url === "/" + pages[1]) {
-        fs.readFile(path.join(__dirname, '/' + pages[1], 'index.html'), (err, data)=>{
-            res.write(data)
-            res.end()
-        })
+        getFileData(pages[1], res);
     }
     if (req.url === "/" + pages[2]) {
-        fs.readFile(path.join(__dirname, '/' + pages[2], 'index.html'), (err, data)=>{
-            res.write(data)
-            res.end()
-        })
+        getFileData(pages[2], res);
     }
 })
 

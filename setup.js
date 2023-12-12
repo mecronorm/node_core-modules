@@ -66,7 +66,11 @@ function createWebsiteLayout() {
 
 function getFileData(folderName, res){
     fs.readFile(path.join(__dirname, '/' + folderName, 'index.html'), (err, data)=>{
-        res.write(data);
+        if (err) {
+            catchError(err)
+        } else {
+            res.write(data);
+        }
         res.end()
     })
 };
@@ -75,20 +79,23 @@ createWebsiteLayout()
 
 server.on("request", (req, res) => {
     console.log("a request has been submitted " +req.url)
-    if (req.url === "/style.css") {
-        res.end()
-    }
-    if (req.url === "/") {
-        getFileData("/", res);
-    }
-    if (req.url === "/" + pages[0]) {
-        getFileData(pages[0], res);
-    }
-    if (req.url === "/" + pages[1]) {
-        getFileData(pages[1], res);
-    }
-    if (req.url === "/" + pages[2]) {
-        getFileData(pages[2], res);
+    switch (req.url) {
+        case "/":
+            getFileData("/", res);
+            break;
+        case "/" + pages[0]:
+            getFileData(pages[0], res);
+            break;
+        case "/" + pages[1]:
+            getFileData(pages[1], res);
+            break;
+        case "/" + pages[2]:
+            getFileData(pages[2], res);
+            break;
+        default:
+            res.statusCode = 404
+            res.end()
+            break;
     }
 })
 

@@ -1,1 +1,1 @@
-This is being run on a Windows 10 Pro computer!
+This is being run on a Windows 10 Home computer!

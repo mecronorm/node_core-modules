@@ -1,6 +1,10 @@
 const path = require("path");
 const fs = require("fs");
+const http = require("http")
 const pages = ["contact", "about", "blog"]
+
+const server = http.createServer();
+
 
 function catchError(err) {
     console.error("Error code :", err.code);
@@ -13,7 +17,7 @@ function getRandomRgb() {
     var g = num >> 8 & 255;
     var b = num & 255;
     return 'rgb(' + r + ', ' + g + ', ' + b + ')';
-  }
+}
 
 function createDirectory(name) {
     try {
@@ -26,9 +30,9 @@ function createDirectory(name) {
 function createIndex(directory){
     try {
         if (directory != "./") {
-            fs.writeFileSync(path.join(__dirname, directory, "index.html"), "<!DOCTYPE html>\n<html lang='en'>\n<head>\n\t<meta charset='UTF-8'>\n\t<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n\t<title>"+directory+"</title>\n\t<link rel='stylesheet' href='style.css'>\n</head>\n<body>\n\t<h1>"+directory+"</h1>\n</body>\n</html>")
+            fs.writeFileSync(path.join(__dirname, directory, "index.html"), "<!DOCTYPE html>\n<html lang='en'>\n<head>\n\t<meta charset='UTF-8'>\n\t<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n\t<title>"+directory+"</title>\n\t<style>body{\n\tbackground-color: " +getRandomRgb()+ ";\n}</style>\n<link rel='stylesheet' href='style.css'>\n</head>\n<body>\n\t<h1>"+directory+"</h1>\n</body>\n</html>")
         } else {
-            fs.writeFileSync(path.join(__dirname, directory, "index.html"), "<!DOCTYPE html>\n<html lang='en'>\n<head>\n\t<meta charset='UTF-8'>\n\t<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n\t<title>Main</title>\n\t<link rel='stylesheet' href='style.css'>\n</head>\n<body>\n\t<h1>main</h1>\n</body>\n</html>")
+            fs.writeFileSync(path.join(__dirname, directory, "index.html"), "<!DOCTYPE html>\n<html lang='en'>\n<head>\n\t<meta charset='UTF-8'>\n\t<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n\t<style>body{\n\tbackground-color: " +getRandomRgb()+ ";\n}</style>\n<title>Main</title>\n\t<link rel='stylesheet' href='style.css'>\n</head>\n<body>\n\t<h1>main</h1>\n</body>\n</html>")
         }
     } catch (err) {
         catchError(err)
@@ -61,3 +65,38 @@ function createWebsiteLayout() {
 }
 
 createWebsiteLayout()
+
+server.on("request", (req, res) => {
+    console.log("a request has been submitted " +req.url)
+    if (req.url === "/style.css") {
+        res.end()
+    }
+    if (req.url === "/") {
+        fs.readFile(path.join(__dirname, '/', 'index.html'), (err, data)=>{
+            res.write(data)
+            res.end()
+        })
+    }
+    if (req.url === "/" + pages[0]) {
+        fs.readFile(path.join(__dirname, '/' + pages[0], 'index.html'), (err, data)=>{
+            res.write(data)
+            res.end()
+        })
+    }
+    if (req.url === "/" + pages[1]) {
+        fs.readFile(path.join(__dirname, '/' + pages[1], 'index.html'), (err, data)=>{
+            res.write(data)
+            res.end()
+        })
+    }
+    if (req.url === "/" + pages[2]) {
+        fs.readFile(path.join(__dirname, '/' + pages[2], 'index.html'), (err, data)=>{
+            res.write(data)
+            res.end()
+        })
+    }
+})
+
+server.listen(3000,()=> {
+    console.log("is running on http://localhost:3000")
+})
